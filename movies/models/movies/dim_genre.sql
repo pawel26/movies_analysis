@@ -1,7 +1,7 @@
 with split_genres as (
     select
         unnest(string_to_array(genre, ', ')) as genre
-    from {{ ref('raw_source') }}
+    from {{ source('dev', 'raw_source') }}
 )
 select
     row_number() over () as genre_id,

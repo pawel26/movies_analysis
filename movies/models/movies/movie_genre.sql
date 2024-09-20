@@ -2,7 +2,7 @@ with split_genres as (
     select
         title,
         unnest(string_to_array(genre, ', ')) as genre
-    from {{ ref('raw_source') }}
+    from {{ source('dev', 'raw_source') }}
 ),
 genre_ids as (
     select

@@ -8,5 +8,9 @@ class BaseExtractSourceService(ABC):
         pass
 
     @abstractmethod
+    def store(self, *args, **kwargs):
+        pass
+
+    @abstractmethod
     def fetch_data(self, title):
         pass

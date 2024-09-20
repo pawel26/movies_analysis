@@ -7,8 +7,8 @@ select
     runtime,
     director,
     writer,
-    language,
-    country,
+    languages,
+    countries,
     awards,
-    box_office
-from {{ ref('raw_source') }}
+    ratings
+from {{ source('dev', 'raw_source') }}
