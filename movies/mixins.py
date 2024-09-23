@@ -21,6 +21,11 @@ class OmdbMovieTransformMixin:
                 box_office = float(box_office_str.replace('K', '')) * 1000
             elif box_office_str.isdigit():
                 box_office = float(box_office_str)
+        ratings = data.get('Ratings', {})
+
+        title = data.get('Title')
+        if not title:
+            return None
 
         return {
             'title': data['Title'],
@@ -34,8 +39,8 @@ class OmdbMovieTransformMixin:
             'actors': data['Actors'],
             'languages': data['Language'].split(","),
             'countries': data['Country'].split(","),
-            'awards': data['Awards'],
-            'ratings': json.dumps(data['Ratings']),
+            'awards': data['Awards'] if data['Awards'] != 'N/A' else '',
+            'ratings': json.dumps(ratings),
             'imdb_rating': imdb_rating,
             'imdb_votes': imdb_votes,
             'metascore': data.get('Metascore', None),

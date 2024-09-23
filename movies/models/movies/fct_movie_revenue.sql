@@ -3,10 +3,7 @@ select
     m.movie_id,
     d.distributor_id,
     r.revenue,
-    r.theaters,
-    r.box_office,
-    r.imdb_rating,
-    r.imdb_votes
+    r.theaters
 from {{ source('dev', 'raw_source') }} r
 join {{ ref('dim_movie') }} m
 on r.title = m.title

@@ -2,28 +2,31 @@ Welcome to your new dbt project!
 
 ### Using the starter project
 
+install requirements from requirements.txt
 To run transformations you need to have database - this project uses PostgresQL
 To create local instance of database pleas run: 
 
-`docker run -d --name dbt-movies -p 5432:5432 -e POSTGRES_USER=YOUR_USER -e POSTGRES_PASSWORD=YOUR_PASS postgres:15-alpine`
-
-you need to create database inside postgres container - pleas execute
+`docker-compose up -d`
+you need to create database schema inside postgres container - pleas execute
 
 ``docker exec -it dbt-movies bin/bash``
 
 and inside container do the following steps:
-- ``psql -U YOUR_USER``
-- ``CREATE DATABASE movies_wh;``
+- ``psql -U postgres``
+- ``CREATE DATABASE movies_wh;`` - only of not created by default inside docker compose
 - ``CREATE SCHEMA dev;``
-- verify connection: ```psql -U YOUR_USER -d  movies_wh```
+- verify connection: ```psql -U postgres -d  movies_wh```
 
 outside the container run:
 ``dbt debug`` to make sure that everything is ok
 
-Try running the following commands:
-- dbt run
-- dbt test
+Put input csv file into data_sources folder
+run load service to fill source table with data -> ``python load_movies_service.py``
+run dbt run to create models
 
+Try running the following commands:
+- ``dbt test``
+- ``dbt run``
 
 ### Resources:
 - Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)

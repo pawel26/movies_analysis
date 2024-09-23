@@ -1,0 +1,77 @@
+version: 2
+
+models:
+  - name: dim_actor
+    columns:
+      - name: actor_id
+        description: Primary key for the listing
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_date
+    columns:
+      - name: date_id
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('fct_movie_revenue')
+              field: date_id
+
+  - name: dim_distributor
+    columns:
+    - name: distributor_id
+      tests:
+        - not_null
+        - unique
+        - relationships:
+            to: ref('fct_movie_revenue')
+            field: distributor_id
+
+  - name: dim_genre
+    columns:
+      - name: genre_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_movie
+    columns:
+      - name: movie_id
+        tests:
+          - not_null
+          - unique
+          - relationships:
+                to: ref('fct_movie_revenue')
+                field: movie_id
+
+  - name: fct_movie_revenue
+    columns:
+      - name: date_id
+        tests:
+          - not_null
+      - name: movie_id
+        tests:
+          - not_null
+      - name: distributor_id
+        tests:
+          - not_null
+
+  - name: fct_movie_genre
+    columns:
+      - name: movie_id
+        tests:
+          - not_null
+      - name: genre_id
+        tests:
+          - not_null
+
+  - name: fct_movie_actor
+    columns:
+      - name: movie_id
+        tests:
+          - not_null
+      - name: actor_id
+        tests:
+          - not_null

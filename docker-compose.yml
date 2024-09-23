@@ -5,7 +5,7 @@ services:
     container_name: metabase
     hostname: metabase
     volumes:
-      - /dev/urandom:/dev/random:ro
+      - ./.datastore/metabase:/data
     ports:
       - 3000:3000
     environment:
@@ -34,6 +34,8 @@ services:
       POSTGRES_PASSWORD: postgres
     networks:
       - metanet1
+    volumes:
+      - ./.datastore/postgresql:/var/lib/postgresql/data
 networks:
   metanet1:
     driver: bridge

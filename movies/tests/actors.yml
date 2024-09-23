@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: <dim_actor>  # Zastąp to nazwą swojego modelu
+    tests:
+      - unique:
+          column_name: actor_id  # Test unikalności dla kolumny actor_id
+      - not_null:
+          column_name: actor_id  # Test na brak wartości null w kolumnie actor_id
+      - unique:
+          column_name: actor  # Test unikalności dla kolumny actor
+      - not_null:
+          column_name: actor  # Test na brak wartości null w kolumnie actor
