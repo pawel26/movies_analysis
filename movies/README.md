@@ -20,7 +20,7 @@ and inside container do the following steps:
 outside the container run:
 ``dbt debug`` to make sure that everything is ok
 
-Put input csv file into data_sources folder
+Put input csv file into `data_sources` folder
 run load service to fill source table with data -> ``python load_movies_service.py``
 run dbt run to create models
 
