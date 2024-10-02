@@ -1,19 +1,33 @@
-with dates as (
-    select
-        distinct date::date as date
-    from {{ source('dev', 'raw_source') }}
+{{
+  config(
+    materialized = 'incremental',
+    unique_key = 'date_id'
+  )
+}}
+
+WITH dates AS (
+    SELECT DISTINCT
+        date::date AS date
+    FROM {{ source('dev', 'raw_source') }}
 )
-select
-    row_number() over () as date_id,
+
+SELECT
+    {{ dbt_utils.generate_surrogate_key(['date']) }} AS date_id,
     date,
-    extract(day from date) as day,
-    extract(month from date) as month,
-    extract(year from date) as year,
-    extract(quarter from date) as quarter,
-    extract(week from date) as week,
-    extract(dow from date) as day_of_week,
-    case
-        when extract(dow from date) in (6, 7) then 1  -- Sobota (6) lub Niedziela (7)
-        else 0
-    end as is_weekend
-from dates
+    EXTRACT(day FROM date) AS day,
+    EXTRACT(month FROM date) AS month,
+    EXTRACT(year FROM date) AS year,
+    EXTRACT(quarter FROM date) AS quarter,
+    EXTRACT(week FROM date) AS week,
+    EXTRACT(dow FROM date) AS day_of_week,
+    CASE
+        WHEN EXTRACT(dow FROM date) IN (6, 7) THEN 1  -- Sobota (6) lub Niedziela (7)
+        ELSE 0
+    END AS is_weekend
+FROM dates
+
+{% if is_incremental() %}
+    WHERE {{ dbt_utils.generate_surrogate_key(['date']) }} NOT IN (
+        SELECT date_id FROM {{ this }}
+    )
+{% endif %}

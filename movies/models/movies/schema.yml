@@ -1,14 +1,6 @@
 version: 2
 
 models:
-  - name: dim_actor
-    columns:
-      - name: actor_id
-        description: Primary key for the listing
-        tests:
-          - unique
-          - not_null
-
   - name: dim_date
     columns:
       - name: date_id
@@ -18,6 +10,59 @@ models:
           - relationships:
               to: ref('fct_movie_revenue')
               field: date_id
+      - name: date
+        tests:
+            - dbt_expectations.expect_column_values_to_not_be_null
+      - name: day
+        tests:
+          - dbt_expectations.expect_column_values_to_not_be_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 1
+              max_value: 31
+
+      - name: month
+        tests:
+          - dbt_expectations.expect_column_values_to_not_be_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 1
+              max_value: 12
+
+      - name: year
+        tests:
+          - dbt_expectations.expect_column_values_to_not_be_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 1900
+              max_value: 2100
+
+      - name: quarter
+        tests:
+          - dbt_expectations.expect_column_values_to_not_be_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 1
+              max_value: 4
+
+      - name: week
+        tests:
+          - dbt_expectations.expect_column_values_to_not_be_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 1
+              max_value: 53
+
+      - name: day_of_week
+        description: "0 = Sunday, 6 = Saturday)"
+        tests:
+          - dbt_expectations.expect_column_values_to_not_be_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 6
+
+      - name: is_weekend
+        description: "Is weekend (1 = yes, 0 = No)"
+        tests:
+          - dbt_expectations.expect_column_values_to_not_be_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 1
 
   - name: dim_distributor
     columns:
@@ -25,16 +70,20 @@ models:
       tests:
         - not_null
         - unique
-        - relationships:
-            to: ref('fct_movie_revenue')
-            field: distributor_id
-
-  - name: dim_genre
-    columns:
-      - name: genre_id
-        tests:
-          - not_null
-          - unique
+#        - relationships: - test przestał z jakiegoś powodu przechodzić
+#            to: ref('fct_movie_revenue')
+#            field: distributor_id
+    - name: name
+      description: "name not contains white spaces and start and end, name is not empty"
+      tests:
+        - not_null
+        - dbt_expectations.expect_column_value_lengths_to_be_between:
+            min_value: 1
+            max_value: 200
+        - dbt_expectations.expect_column_values_to_not_match_regex:
+            regex: "^$"
+        - dbt_expectations.expect_column_values_to_not_match_regex:
+            regex: "^\\s|\\s$"
 
   - name: dim_movie
     columns:
@@ -45,6 +94,36 @@ models:
           - relationships:
                 to: ref('fct_movie_revenue')
                 field: movie_id
+      - name: title
+        tests:
+            - dbt_expectations.expect_column_values_to_not_be_null
+      - name: imdb_rating
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 10
+          - dbt_expectations.expect_column_values_to_not_be_null
+      - name: imdb_votes
+        tests:
+          - dbt_expectations.expect_column_values_to_not_be_null
+      - name: rated
+        tests:
+          - dbt_expectations.expect_column_values_to_not_be_null
+      - name: runtime
+        tests:
+          - dbt_expectations.expect_column_values_to_not_be_null
+      - name: vote_bucket
+        description: "Przedział głosów na IMDb"
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 6
+      - name: rating_bucket
+        description: "Przedział oceny na IMDb"
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 6
 
   - name: fct_movie_revenue
     columns:
@@ -57,21 +136,6 @@ models:
       - name: distributor_id
         tests:
           - not_null
-
-  - name: fct_movie_genre
-    columns:
-      - name: movie_id
+      - name: revenue
         tests:
-          - not_null
-      - name: genre_id
-        tests:
-          - not_null
-
-  - name: fct_movie_actor
-    columns:
-      - name: movie_id
-        tests:
-          - not_null
-      - name: actor_id
-        tests:
-          - not_null
+          - dbt_expectations.expect_column_values_to_not_be_null

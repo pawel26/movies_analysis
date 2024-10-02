@@ -28,6 +28,13 @@ Try running the following commands:
 - ``dbt test``
 - ``dbt run``
 
+#### run project with Prefect
+to run orchestrated project we need to setup prefect server - to run it pleas run command
+``prefect server start``
+and go to  http://127.0.0.1:4200
+
+to run pipeline use script ``python movies_pipeline.py`` - it will automatically do a deployment and schedule cyclic task visible in prefect web UI
+
 ### Resources:
 - Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
 - Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
