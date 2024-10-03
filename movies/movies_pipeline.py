@@ -66,6 +66,6 @@ if __name__ == "__main__":
         name="movies-deployment",
         tags=["onboarding"],
         pause_on_shutdown=True,
-        interval=180
+        interval=3600
     )
 
